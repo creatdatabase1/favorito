@@ -27,7 +27,7 @@ const getUserById = async (req, res) => {
 const createUser = async (req, res) => {
   const { fullname, username, password } = req.body;
   try {
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
     await pool.query('INSERT INTO users (fullname, username, password) VALUES (?, ?, ?)', [fullname, username, hashedPassword]);
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
@@ -39,7 +39,7 @@ const updateUser = async (req, res) => {
   const { id } = req.params;
   const { fullname, username, password } = req.body;
   try {
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const [result] = await pool.query('UPDATE users SET fullname = ?, username = ?, password = ? WHERE user_id = ?', [fullname, username, hashedPassword, id]);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'User not found' });
