@@ -1,6 +1,6 @@
 const pool = require('../config/database');
 const bcrypt = require('bcrypt');
-const { json } = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
  
 const getAllUsers = async (req, res) => {
   try {
