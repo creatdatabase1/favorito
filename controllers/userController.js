@@ -52,14 +52,27 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   const { id } = req.params;
+
+  // Validate the input
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
+
   try {
+    // Execute the DELETE query
     const [result] = await pool.query('DELETE FROM users WHERE user_id = ?', [id]);
+
+    // Check if a user was deleted
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
+
+    // Respond with success message
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error deleting user:', error); // Log the error for debugging
+    res.status(500).json({ error: 'An unexpected error occurred' });
   }
 };
+
 module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser };
